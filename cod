@@ -1,0 +1,50 @@
+#!/bin/csh -f
+
+set cod_cmds=/home/shmishra/temp/cmd
+
+set req = $<
+
+if ($req == "") then
+  echo help
+
+else if ($req == a) then
+  echo "Add:"
+  set req = $<
+  echo $req >> $cod_cmds
+
+else if ($req == s) then
+  if ($2 == "") then
+    echo "Search:"
+    set req = $<
+  else 
+    set req = $2
+  endif  
+  set cmds=("`grep $req $cod_cmds`")
+
+  @ i = 1
+  while ( $i <= ${#cmds} )
+    echo "$i $cmds[$i]"
+    @ i++
+  end
+
+else if ($req == x) then
+  if ($2 == "") then
+    echo "Execute:"
+    set req = $<
+  else 
+    set req = $2
+  endif  
+  set cmds=("`grep $req $cod_cmds`")
+
+  @ i = 1
+  while ( $i <= ${#cmds} )
+    echo "$i $cmds[$i]"
+    @ i++
+  end
+
+  if (${#cmds} > 0) then
+    set req = $<
+    echo $cmds[$req] >> tmp.cod
+  endif
+  
+endif
