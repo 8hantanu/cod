@@ -1,25 +1,28 @@
 #!/bin/csh -f
 
-set cod_cmds=/home/shmishra/temp/cmd
+echo "a - add; g - grep; s - source; x - execute; h - help"
+
+if (! -f $COD/cmds.cod) then
+  touch $COD/cmds.cod
+endif
 
 set req = $<
 
-if ($req == "") then
-  echo help
+if ($req == "h") then
+  echo "a - add new commands"
+  echo "g - grep existing commands"
+  echo "s - source from commands"
+  echo "x - execute commands"
 
 else if ($req == a) then
   echo "Add:"
-  set req = $<
-  echo $req >> $cod_cmds
+  set req = "$<"
+  echo $req >> $COD/cmds.cod
 
-else if ($req == s) then
-  if ($2 == "") then
-    echo "Search:"
-    set req = $<
-  else 
-    set req = $2
-  endif  
-  set cmds=("`grep $req $cod_cmds`")
+else if ($req == g) then
+  echo "Search:"
+  set req = ("$<")
+  set cmds=("`grep '$req[1]' $COD/cmds.cod`")
 
   @ i = 1
   while ( $i <= ${#cmds} )
@@ -27,14 +30,14 @@ else if ($req == s) then
     @ i++
   end
 
-else if ($req == x) then
+else if ($req == s) then
   if ($2 == "") then
-    echo "Execute:"
+    echo "Source:"
     set req = $<
   else 
     set req = $2
   endif  
-  set cmds=("`grep $req $cod_cmds`")
+  set cmds=("`grep $req $COD/cmds.cod`")
 
   @ i = 1
   while ( $i <= ${#cmds} )
